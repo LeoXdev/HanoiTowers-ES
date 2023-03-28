@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// GameManager takes care of multiple game operations: <br></br>
@@ -29,13 +30,13 @@ public class GameManager : MonoBehaviour
         };
         DiskSelected = -1;
 
-        VictoryText.SetActive(false);
+        //VictoryText.SetActive(false);
     }
     /// <summary>
     /// VictoryText holds a gameobject that'll display a victory message at the moment you win.
     /// </summary>
-    [SerializeField] private GameObject VictoryText;
-    [SerializeField] private GameObject MenuBG;
+    //[SerializeField] private GameObject VictoryText;
+    //[SerializeField] private GameObject MenuBG;
     void Update()
     {
         Debug.Log("Disk Selected = " + DiskSelected);
@@ -43,10 +44,20 @@ public class GameManager : MonoBehaviour
         if (_lastTower.GetComponent<Tower>().Stack.Count == NumberOfDisks &&
             _lastTower.GetComponent<Tower>().Stack.Count > 0)
         {
-            MenuBG.SetActive(true);
-            VictoryText.SetActive(true);
-            GameReset();
+            //MenuBG.SetActive(true);
+            //VictoryText.SetActive(true);
+            //GameReset();
+
+            // Simple but effective new reload game implementation, loading the scene again will reset the game state
+            _particleSystem.gameObject.SetActive(true);
+            Invoke("InvokedRestart", 2.85f);
         }
+    }
+    // Victory VFX
+    [SerializeField] ParticleSystem _particleSystem;
+    private void InvokedRestart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     /// <summary>
     /// NumberOfDisks holds the number of disks the game will have, the modification while the game's already running won't
