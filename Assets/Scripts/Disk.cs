@@ -10,10 +10,11 @@ public class Disk : MonoBehaviour
     /// </summary>
     public int Value;
 
-    private Transform Transform;
+    //private Transform Transform;
+    [SerializeField] private TextMesh _valueText;
     private void Start()
     {
-        Transform = this.GetComponent<Transform>();
+        //Transform = this.GetComponent<Transform>();
+        _valueText.text = Value.ToString();
     }
-
 }

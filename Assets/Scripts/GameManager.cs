@@ -131,11 +131,11 @@ public class GameManager : MonoBehaviour
                 return;
             }
             // Case: player wants to move a disk into the same tower, still doesn't works
-            //else if (diskToMove.GetComponent<Disk>().Value + 1 == receivingTower.Stack.Peek().GetComponent<Disk>().Value)
-            //{
-                //Debug.Log("Player tried to move a disk into the same tower, try again.");
-                //return;
-            //}
+            if (diskToMove.GetComponent<Disk>().Value == receivingTower.Stack.Peek().GetComponent<Disk>().Value)
+            {
+                Debug.Log("Player tried to move a disk into the same tower, try again.");
+                return;
+            }
             // Case: player moves the disk into a different tower
             diskToMove.transform.position = receivingTower.Stack.Peek().transform.position + new Vector3(0.0f, 0.2f, 0.0f);
         }
@@ -200,4 +200,9 @@ public class GameManager : MonoBehaviour
         return inputValue;
     }
 
+
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
 }
