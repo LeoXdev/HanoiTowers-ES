@@ -48,17 +48,12 @@ public class GameManager : MonoBehaviour
             //VictoryText.SetActive(true);
             //GameReset();
 
-            // Simple but effective new reload game implementation, loading the scene again will reset the game state
             _particleSystem.gameObject.SetActive(true);
-            Invoke("InvokedRestart", 2.85f);
         }
     }
     // Victory VFX
     [SerializeField] ParticleSystem _particleSystem;
-    private void InvokedRestart()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
+
     /// <summary>
     /// NumberOfDisks holds the number of disks the game will have, the modification while the game's already running won't
     /// have any effect until a new game is started.
@@ -105,8 +100,6 @@ public class GameManager : MonoBehaviour
             _firstTower.Stack.Push(disk);
         }
 
-        // Save references to those disks to destroy them when starting a new game
-        _disksArray = GameObject.FindGameObjectsWithTag("Disk");
     }
     //-------------------- Game going --------------------
     /// <summary>
@@ -134,6 +127,8 @@ public class GameManager : MonoBehaviour
             if (diskToMove.GetComponent<Disk>().Value == receivingTower.Stack.Peek().GetComponent<Disk>().Value)
             {
                 Debug.Log("Player tried to move a disk into the same tower, try again.");
+                DiskSelected = -1;
+                diskToMove.GetComponent<MeshRenderer>().material.color = Color.magenta;
                 return;
             }
             // Case: player moves the disk into a different tower
@@ -157,27 +152,16 @@ public class GameManager : MonoBehaviour
     /// -1 -> No tower is selected <br></br>
     /// </summary>
     public static int DiskSelected;
-    //-------------------- Game reset --------------------
-    /// <summary>
-    /// _disksArray holds a reference to all the disks, it'll make possible to destroy all the disks when starting a new game.
-    /// </summary>
-    private GameObject[] _disksArray;
-
+    //-------------------- Game reset and exit --------------------
+    // Loading the scene again will reset the game state
     public void GameReset()
     {
-        if (_disksArray != null)
-        {
-            foreach (var disk in _disksArray)
-            {
-                Destroy(disk);
-                _disksArray = null;
-            }
-        }
-        else
-        {
-            Debug.Log("Game hasn't been started yet.");
-        }
-        
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
     //----------------------- Helper methods -----------------------
     /// <summary>
@@ -198,11 +182,5 @@ public class GameManager : MonoBehaviour
         }
 
         return inputValue;
-    }
-
-
-    public void ExitGame()
-    {
-        Application.Quit();
     }
 }
