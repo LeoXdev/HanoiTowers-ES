@@ -174,7 +174,7 @@ public class GameManager : MonoBehaviour
         int inputValue;
         try
         {
-            inputValue = Int32.Parse(_Input_DisksNumber.text);
+            inputValue = Int32.Parse(input.text);
         }
         catch (Exception e)
         {
